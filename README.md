@@ -10,7 +10,7 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.15-EE4C2C?logo=pytorch&logoColor=white)
 
-![首页](screenshots/home.png)
+![首页](pawpedia/screenshots/home.png)
 
 ## 目录
 
@@ -55,8 +55,8 @@
 
 项目分为两部分：
 
-1. **Web 系统**：`backend/` + `frontend/`，负责页面、用户、记录、科普和管理端；
-2. **模型训练**：`training/`，负责爬取数据、训练 CNN、知识蒸馏，产出可部署的模型权重。
+1. **Web 系统**：`pawpedia/backend/` + `pawpedia/frontend/`，负责页面、用户、记录、科普和管理端；
+2. **模型训练**：`dog_recognition/`，负责爬取数据、训练 CNN、知识蒸馏，产出可部署的模型权重。
 
 > 模型测试集准确率为 **57.50%（276/480）**，页面里的演示图是挑选过的正确样本，整体准确率请以测试集数字为准。
 
@@ -116,11 +116,11 @@
        ▼        ▼
 ┌──────────┐  ┌──────────────────────┐
 │ MySQL    │  │ PyTorch DogCNN (8类)  │
-│ SQLAlchemy│ │ backend/models/*.pth  │
+│ SQLAlchemy│ │ pawpedia/backend/models/*.pth  │
 └──────────┘  └──────────────────────┘
 ```
 
-- 用户上传图片 → 后端保存到 `backend/uploads/` → 模型推理 → 返回识别结果；
+- 用户上传图片 → 后端保存到 `pawpedia/backend/uploads/` → 模型推理 → 返回识别结果；
 - 登录用户的结果写入 `recognition_records` 表；
 - 科普图片和品种信息由 `breeds` 表提供；
 - 管理员通过 `/api/admin/*` 接口管理数据。
@@ -130,72 +130,78 @@
 ## 项目结构
 
 ```
-pawpedia/
-├── backend/                     # FastAPI 后端
-│   ├── app/
-│   │   ├── main.py              # 入口、CORS、静态目录
-│   │   ├── config.py            # 环境变量、数据库地址
-│   │   ├── database.py          # SQLAlchemy 引擎与会话
-│   │   ├── models.py            # User / Breed / RecognitionRecord
-│   │   ├── schemas.py           # Pydantic 请求与响应
-│   │   ├── security.py          # PBKDF2 + JWT
-│   │   ├── deps.py              # 当前用户 / 管理员依赖
-│   │   ├── seed.py              # 默认账号 + 8 个品种科普
-│   │   ├── ml/predictor.py      # 模型加载与推理
-│   │   └── routers/
-│   │       ├── auth.py          # 注册 / 登录 / 当前用户
-│   │       ├── breeds.py        # 公开科普接口
-│   │       ├── recognition.py   # 图片识别
-│   │       ├── history.py       # 用户历史
-│   │       └── admin.py         # 管理端
-│   ├── models/
-│   │   └── dog_classification_model.pth
-│   ├── static/breeds/           # 8 张品种图片
-│   ├── uploads/                 # 用户上传图片
-│   ├── scripts/init_mysql.sql
-│   ├── requirements.txt
-│   ├── .env                     # 本地开发配置（默认 SQLite）
-│   ├── .env.example             # MySQL 示例
-│   └── run.py
+quan/
+├── README.md                    # 本文件（GitHub 仓库首页）
+├── .gitignore
 │
-├── frontend/                    # Vue 3 前端
-│   ├── src/
-│   │   ├── api/                 # axios + 接口封装
-│   │   ├── assets/styles.css    # 可爱萌宠主题
-│   │   ├── components/          # Header / Footer / BreedCard / Toast…
-│   │   ├── layouts/             # 前台布局 + 管理端布局
-│   │   ├── router/              # 路由与权限守卫
-│   │   ├── stores/              # Pinia：登录态、Toast
-│   │   ├── views/               # 首页 / 识别 / 图鉴 / 历史 / 登录…
-│   │   │   └── admin/           # 概览 / 用户 / 记录 / 科普
-│   │   ├── App.vue
-│   │   └── main.js
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.js
-│   └── .env.example
+├── pawpedia/                    # Web 系统（前后端分离）
+│   ├── backend/                 # FastAPI 后端
+│   │   ├── app/
+│   │   │   ├── main.py          # 入口、CORS、静态目录
+│   │   │   ├── config.py        # 环境变量、数据库地址
+│   │   │   ├── database.py      # SQLAlchemy 引擎与会话
+│   │   │   ├── models.py        # User / Breed / RecognitionRecord
+│   │   │   ├── schemas.py       # Pydantic 请求与响应
+│   │   │   ├── security.py      # PBKDF2 + JWT
+│   │   │   ├── deps.py          # 当前用户 / 管理员依赖
+│   │   │   ├── seed.py          # 默认账号 + 8 个品种科普
+│   │   │   ├── ml/predictor.py  # 模型加载与推理
+│   │   │   └── routers/
+│   │   │       ├── auth.py      # 注册 / 登录 / 当前用户
+│   │   │       ├── breeds.py    # 公开科普接口
+│   │   │       ├── recognition.py
+│   │   │       ├── history.py
+│   │   │       └── admin.py
+│   │   ├── models/
+│   │   │   └── dog_classification_model.pth
+│   │   ├── static/breeds/       # 8 张品种图片
+│   │   ├── uploads/             # 用户上传图片
+│   │   ├── scripts/init_mysql.sql
+│   │   ├── requirements.txt
+│   │   ├── .env                 # 本地开发配置（默认 SQLite）
+│   │   ├── .env.example         # MySQL 示例
+│   │   └── run.py
+│   │
+│   ├── frontend/                # Vue 3 + Vite 前端
+│   │   ├── src/
+│   │   │   ├── api/             # axios + 接口封装
+│   │   │   ├── assets/styles.css
+│   │   │   ├── components/
+│   │   │   ├── layouts/
+│   │   │   ├── router/
+│   │   │   ├── stores/
+│   │   │   ├── views/
+│   │   │   │   └── admin/
+│   │   │   ├── App.vue
+│   │   │   └── main.js
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── vite.config.js
+│   │   └── .env.example
+│   │
+│   └── screenshots/             # 页面截图 + 训练曲线
 │
-├── training/                    # 模型训练与蒸馏（数据集不随仓库提供）
-│   ├── 1.download_data.py       # 百度图片爬虫（8 类 × 300 张）
-│   ├── 2.split_data.py          # 8:2 划分
-│   ├── 3.train_cnn.py           # 训练教师 DogCNN
-│   ├── 4.classifier_ui.py       # Tkinter 调试界面（可选）
-│   ├── 6.distillation_cnn.py    # 知识蒸馏（教师 → 学生）
-│   ├── images/                  # 8 张演示图
-│   ├── requirements.txt
-│   └── user_info.txt
-│
-├── screenshots/                 # 页面截图 + 训练曲线
-├── README.md
-└── .gitignore
+└── dog_recognition/             # 模型训练与蒸馏（数据集不随仓库提供）
+    ├── 1.download_data.py       # 百度图片爬虫（8 类 × 300 张）
+    ├── 2.split_data.py          # 8:2 划分
+    ├── 3.train_cnn.py           # 训练教师 DogCNN
+    ├── 4.classifier_ui.py       # Tkinter 调试界面（可选）
+    ├── 6.distillation_cnn.py    # 知识蒸馏（教师 → 学生）
+    ├── images/                  # 8 张演示图
+    ├── requirements.txt
+    ├── user_info.txt
+    ├── README.md                # 训练项目详细说明
+    └── 技术文档.md               # 训练目录说明
 ```
 
-> `training/` 只包含代码和少量演示图，不包含 2400 张训练图片和训练集/测试集，避免仓库过大。
-> 需要复现训练时，在 `training/` 目录运行爬虫即可重新采集。
+> 仓库中 `dog_recognition/` 只保留代码和少量演示图；`dog_images/`、`dog_images_split/`、`models/`、`results/`、`logs/` 属于运行产物，已在 `.gitignore` 中排除。
+> 需要复现训练时，在 `dog_recognition/` 目录运行爬虫即可重新采集。
 
 ---
 
 ## 快速开始
+
+> 下面的命令都在仓库根目录 `quan/` 下执行。
 
 ### 环境要求
 
@@ -207,7 +213,7 @@ pawpedia/
 ### 1. 启动后端
 
 ```powershell
-cd backend
+cd pawpedia/backend
 python -m pip install -r requirements.txt
 python run.py
 ```
@@ -227,7 +233,7 @@ python run.py
 ### 2. 启动前端
 
 ```powershell
-cd frontend
+cd pawpedia/frontend
 npm install
 npm run dev
 ```
@@ -241,23 +247,23 @@ npm run dev
 | 管理员 | `admin` | `admin123` |
 | 普通用户 | `user` | `user123456` |
 
-> `training/4.classifier_ui.py` 是模型调试用的 Tkinter 界面，它自己的账号是 `admin / 123456`，与 Web 系统不同。
+> `dog_recognition/4.classifier_ui.py` 是模型调试用的 Tkinter 界面，它自己的账号是 `admin / 123456`，与 Web 系统不同。
 
 ### 4. 切换到 MySQL
 
 本地开发默认 SQLite，开箱即用。要按要求使用 MySQL：
 
 ```powershell
-mysql -u root -p < backend\scripts\init_mysql.sql
+Get-Content .\pawpedia\backend\scripts\init_mysql.sql | mysql -u root -p
 ```
 
 先复制配置模板（仓库不会提交 `.env`）：
 
 ```powershell
-Copy-Item backend\.env.example backend\.env
+Copy-Item pawpedia\backend\.env.example pawpedia\backend\.env
 ```
 
-然后修改 `backend/.env`：
+然后修改 `pawpedia/backend/.env`：
 
 ```env
 DATABASE_URL=mysql+pymysql://pawpedia:pawpedia123@127.0.0.1:3306/pawpedia?charset=utf8mb4
@@ -374,12 +380,12 @@ breeds 独立存储（识别结果按 name_cn 关联科普卡片）
 - 训练集 1920 张（每类 240），测试集 480 张（每类 60）
 - 数据来源：百度图片 JSON 接口
 - 爬虫做了 Cookie 预热、Content-Type 校验、PIL 校验、MD5 去重、限速
-- 数据集不随仓库提供，运行 `training/1.download_data.py` 重新采集
+- 数据集不随仓库提供，运行 `dog_recognition/1.download_data.py` 重新采集
 
 ### 训练代码
 
 ```powershell
-cd training
+cd dog_recognition
 python -m pip install -r requirements.txt
 python 1.download_data.py
 python 2.split_data.py
@@ -388,14 +394,14 @@ python 3.train_cnn.py
 
 训练完成后：
 
-- `training/models/dog_classification_model.pth`
-- `training/results/training_history.png`
-- `training/results/prediction_<类别>.png`
+- `dog_recognition/models/dog_classification_model.pth`
+- `dog_recognition/results/training_history.png`
+- `dog_recognition/results/prediction_<类别>.png`
 
 把模型复制到 Web 系统：
 
 ```powershell
-Copy-Item training\models\dog_classification_model.pth backend\models\
+Copy-Item dog_recognition\models\dog_classification_model.pth pawpedia\backend\models\
 ```
 
 ### DogCNN 结构
@@ -427,15 +433,15 @@ Loss = α · T² · KL( softmax(student/T) ‖ softmax(teacher/T) )
 参数：`T=4`，`α=0.7`。
 
 ```powershell
-cd training
+cd dog_recognition
 python 6.distillation_cnn.py
 ```
 
 输出：
 
-- `training/models/distilled_dog_model.pth`
-- `training/results/distillation_history.png`
-- `training/results/distillation_result.txt`
+- `dog_recognition/models/distilled_dog_model.pth`
+- `dog_recognition/results/distillation_history.png`
+- `dog_recognition/results/distillation_result.txt`
 
 > 由于教师本身只有 57.5%，学生同结构蒸馏后为 56.67%，没有超过教师。
 > 这属于“弱教师 + 同结构学生”的正常结果；想看到收益，建议换更强的教师（如 ResNet18）。
@@ -453,9 +459,9 @@ ResNet18 目前只作为对照实验，未接入 Web 系统。
 
 ### 训练曲线
 
-![训练曲线](screenshots/training/training_history.png)
+![训练曲线](pawpedia/screenshots/training/training_history.png)
 
-![蒸馏曲线](screenshots/training/distillation_history.png)
+![蒸馏曲线](pawpedia/screenshots/training/distillation_history.png)
 
 ---
 
@@ -508,19 +514,19 @@ ResNet18 目前只作为对照实验，未接入 Web 系统。
 
 | 首页 | 犬类图鉴 |
 |---|---|
-| ![](screenshots/home.png) | ![](screenshots/encyclopedia.png) |
+| ![](pawpedia/screenshots/home.png) | ![](pawpedia/screenshots/encyclopedia.png) |
 
 | 图片识别 | 登录 |
 |---|---|
-| ![](screenshots/e2e_recognize.png) | ![](screenshots/login.png) |
+| ![](pawpedia/screenshots/e2e_recognize.png) | ![](pawpedia/screenshots/login.png) |
 
 | 管理端概览 | 管理端用户 |
 |---|---|
-| ![](screenshots/e2e_admin_dashboard.png) | ![](screenshots/e2e_admin_users.png) |
+| ![](pawpedia/screenshots/e2e_admin_dashboard.png) | ![](pawpedia/screenshots/e2e_admin_users.png) |
 
 | 管理端科普 | 识别历史 |
 |---|---|
-| ![](screenshots/e2e_admin_breeds.png) | ![](screenshots/e2e_history.png) |
+| ![](pawpedia/screenshots/e2e_admin_breeds.png) | ![](pawpedia/screenshots/e2e_history.png) |
 
 ---
 
@@ -537,12 +543,12 @@ ResNet18 目前只作为对照实验，未接入 Web 系统。
 
 ### Q2：提示“未找到模型文件”？
 
-确认 `backend/models/dog_classification_model.pth` 存在。如果还没训练，可以在 `training/` 里训练，或从原项目复制。
+确认 `pawpedia/backend/models/dog_classification_model.pth` 存在。如果还没训练，可以在 `dog_recognition/` 里训练，或从原项目复制。
 
 ### Q3：MySQL 连接失败？
 
 - 确认 MySQL 服务已启动；
-- 确认执行了 `backend/scripts/init_mysql.sql`；
+- 确认执行了 `pawpedia/backend/scripts/init_mysql.sql`；
 - 确认 `.env` 的账号密码和 SQL 一致；
 - 如果报 `caching_sha2_password`，安装 `cryptography` 即可。
 
@@ -556,7 +562,7 @@ ResNet18 目前只作为对照实验，未接入 Web 系统。
 
 ### Q6：为什么演示图置信度接近 100%，整体却只有 57.5%？
 
-`images/` 和 `screenshots/` 里用的是挑选过的、模型能正确识别的样本。整体测试集有 480 张，包含很多难图和噪声图。
+`images/` 和 `pawpedia/screenshots/` 里用的是挑选过的、模型能正确识别的样本。整体测试集有 480 张，包含很多难图和噪声图。
 
 ### Q7：为什么不能改类别文件夹名？
 

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 环境变量 / 本地数据库
+.env
+*.db
+*.sqlite3
+
+# Web 系统
+pawpedia/backend/.env
+pawpedia/backend/uploads/*
+!pawpedia/backend/uploads/.gitkeep
+pawpedia/frontend/node_modules/
+pawpedia/frontend/dist/
+pawpedia/frontend/.vite/
+
+# 训练项目的数据与运行产物（代码和演示图保留）
+dog_recognition/dog_images/
+dog_recognition/dog_images_split/
+dog_recognition/models/
+dog_recognition/results/
+dog_recognition/logs/
+dog_recognition/__pycache__/
+
+# 系统
+.DS_Store
+Thumbs.db
