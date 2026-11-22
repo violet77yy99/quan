@@ -1,0 +1,14 @@
+# 本项目实测版本（Python 3.12 / Windows / CPU）
+#
+# 注意：torch 建议用 CPU 专用源安装，体积小很多：
+#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# 下面固定的是本机验证过的版本；有 NVIDIA GPU 时可改用对应 CUDA 版本的 torch。
+
+torch==2.15.0
+torchvision==0.29.2
+opencv-python==5.1.0.95
+pillow==13.0.0
+numpy==2.5.4
+matplotlib==3.11.2
+requests==2.34.2
+tqdm==4.70.1
