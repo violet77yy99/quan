@@ -13,6 +13,14 @@ venv/
 backend/uploads/*
 !backend/uploads/.gitkeep
 
+# 训练产生的数据与模型（数据集不随仓库提供）
+training/dog_images/
+training/dog_images_split/
+training/models/
+training/results/
+training/logs/
+training/__pycache__/
+
 # 前端
 frontend/node_modules/
 frontend/dist/
